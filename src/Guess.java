@@ -18,13 +18,15 @@ public class Guess {
 	public static int make_guess(int hits, int strikes) {
 		// just a dummy guess
 		 /* IMPLEMENT YOUR GUESS STRATEGY HERE*/
-		for (int i = 0; i < prob.size(); i++) {
-			if (!checkAnswer(strikes, hits, prob.get(i), guess)) {
-				prob.remove(i);
-				i--;
-
+		if (guessCount != 1) {
+			for (int i = 0; i < prob.size(); i++) {
+				if (!checkAnswer(strikes, hits, prob.get(i), guess)) {
+					prob.remove(i);
+					i--;
+				}
 			}
 		}
+		System.out.println("size: " + prob.size());
 		if (prob.size() > 1) {
 			guess = prob.get((int)(Math.random() * prob.size())); //random from possible answers
 			if (guessCount <= 3 && (strikes > 0 || hits > 0)) {
