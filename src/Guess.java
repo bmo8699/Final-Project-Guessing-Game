@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Random;
-import java.util.Scanner;
 
 /*
  * You need to implement an algorithm to make guesses
@@ -13,31 +13,30 @@ public class Guess {
 	static ArrayList<Integer> prob = new ArrayList<Integer>(); //probable guesses, initialized in GuessRunner class
 	static int guessCount = 1; //number of guess
 	static boolean isHitOrStrike = false;
-	static ArrayList<Integer> firstThreeGuesses = new ArrayList<Integer>(Arrays.asList(123,4567,7890));  //First three guesses to avoid duplicate digits (e.g. 2222) when random and narrow the pool
+	static ArrayList<Integer> firstThreeGuesses = new ArrayList<Integer>(Arrays.asList(1230,4567,7890));  //First three guesses to avoid duplicate digits (e.g. 2222) when random and narrow the pool
 	static int guess;
 	public static int make_guess(int hits, int strikes) {
 		// just a dummy guess
-		 /* IMPLEMENT YOUR GUESS STRATEGY HERE*/
+		/* IMPLEMENT YOUR GUESS STRATEGY HERE*/
 		if (guessCount != 1) {
 			for (int i = 0; i < prob.size(); i++) {
-				if (!checkAnswer(strikes, hits, prob.get(i), guess)) {
+				if (!isPossible(strikes, hits, prob.get(i), guess)) {
 					prob.remove(i);
 					i--;
 				}
 			}
 		}
-		System.out.println("size: " + prob.size());
 		if (prob.size() > 1) {
 			guess = prob.get((int)(Math.random() * prob.size())); //random from possible answers
-			if (guessCount <= 3 && (strikes > 0 || hits > 0)) {
+			if (guessCount <= 1 && (strikes > 0 || hits > 1)) {
 				isHitOrStrike = true;
 			}
-			if (guessCount <= 3 && !isHitOrStrike) { //First three counts without hit or strike
+			if (guessCount <= 1 && !isHitOrStrike) { //First three counts without hit or strike
 				int rand = new Random().nextInt(firstThreeGuesses.size());
 				guess = firstThreeGuesses.get(rand);
 				firstThreeGuesses.remove(rand);
-				guessCount++;
 			}
+			guessCount++;
 		} else if (!prob.isEmpty()){
 			guess = prob.get(0);
 		}
@@ -46,7 +45,7 @@ public class Guess {
 	}
 
 	//Check if probable answer contains hit or strike digits from guess
-	private static boolean checkAnswer(int strikes,int hits,int answer,int guess) {
+	private static boolean isPossible(int strikes,int hits,int answer,int guess) {
 		int tempStrikes = 0, tempHits = 0;
 		int numbers[] = new int[10];
 		for(int i = 0; i < 4; i++) {
